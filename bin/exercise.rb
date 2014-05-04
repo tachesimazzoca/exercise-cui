@@ -19,6 +19,15 @@ class String
   def green
     colorize(32)
   end
+
+  def indent(n)
+    sp = " " * n 
+    s = ""
+    self.lines do |ln|
+      s << (sp + ln)
+    end
+    s
+  end
 end
 
 module Exercise
@@ -59,17 +68,17 @@ module Exercise
     def self.run(unit)
       puts
       puts ("Unit %d" % [unit.number]).bold
-      puts "    #{unit.contents[:title]}"
+      puts unit.contents[:title].indent(4)
       puts
-      puts unit.contents[:description]
+      puts unit.contents[:description].indent(4)
       puts
 
       results = []
 
       unit.exercises.each.with_index do |ex, exi|
         section = exi + 1
-        puts ("Ex. %d.%d" % [unit.number, section]).bold
-        puts "    #{ex[:subject]}"
+        puts ("%d.%d" % [unit.number, section]).bold
+        puts ex[:subject].indent(4)
         puts
         nq = ex[:questions].length
         nc = 0;
@@ -102,13 +111,13 @@ module Exercise
       nc = 0
       nq = 0
       results.each do |rs|
-        puts "  Ex %d.%d - %.2f %d/%d" % [
+        puts ("%d.%d - %.2f %d/%d" % [
           unit.number,
           rs[:section],
           100 * rs[:correct] / rs[:divisor],
           rs[:correct],
           rs[:divisor]
-        ]
+        ]).indent(2)
         nc += rs[:correct]
         nq += rs[:divisor]
       end

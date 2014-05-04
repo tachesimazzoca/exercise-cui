@@ -50,7 +50,7 @@ module Exercise
     end
 
     def self.load_yaml(io)
-      data = YAML.load(io) rescue {}
+      data = YAML.load(io)
       self.new(data)
     end
   end

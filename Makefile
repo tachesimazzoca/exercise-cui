@@ -4,4 +4,4 @@ all:
 
 .PHONY: run-example
 run-example:
-	@bin/exercise.rb data/example.yml
+	@bin/exercise-cli data/example.yml

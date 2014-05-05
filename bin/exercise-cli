@@ -1,0 +1,8 @@
+#!/usr/bin/env ruby
+
+require 'open-uri'
+require File.expand_path('../../lib/exercise.rb', __FILE__)
+
+module Exercise
+  Runner.run(Content.load_yaml(open(ARGV[0])))
+end

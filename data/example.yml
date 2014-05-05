@@ -1,22 +1,22 @@
-number: 123
+seed: 123
 
-title: "Example 123"
-
-description: "Any descriptions are here."
+meta:
+  title: Example Exercise 
+  description: Some description is here.
 
 exercises:
-  - subject: "Write am, is, or are."
+  - subject: Write am, is, or are.
     questions:
-      - "I ___am___ a programmer."
-      - "He ___is___ a teacher."
-      - "___Are___ you hungry?"
-      - "Here ___is___ your key."
-      - "These chairs ___are___ comfortable."
+      - I ___am___ a programmer.
+      - He ___is___ a teacher.
+      - ___Are___ you hungry?
+      - Here ___is___ your key.
+      - These chairs ___are___ comfortable.
 
-  - subject: "Write the simple past of these verbs."
+  - subject: Write the simple past of these verbs.
     questions:
-      - "build ___built___"
-      - "eat ___ate___"
-      - "go ___went___"
-      - "see ___saw___"
-      - "write ___wrote___"
+      - build ___built___
+      - eat ___ate___
+      - go ___went___
+      - see ___saw___
+      - write ___wrote___

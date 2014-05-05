@@ -1,7 +1,4 @@
-#!/usr/bin/env ruby
-
 require 'yaml'
-require 'open-uri'
 
 class String
   def colorize(code)
@@ -31,14 +28,14 @@ class String
 end
 
 module Exercise
-  class Unit
-    attr_reader :number, :contents, :exercises
+  class Content
+    attr_reader :seed, :meta, :exercises
 
     def initialize(data)
-      @number = data['number'].to_i
-      @contents = {
-        :title => data['title'].to_s,
-        :description => data['description'].to_s
+      @seed = data['seed'].to_i
+      @meta = {
+        :title => data['meta']['title'].to_s,
+        :description => data['meta']['description'].to_s
       }
       @exercises = []
       data['exercises'].each do |ex|
@@ -50,14 +47,22 @@ module Exercise
           ques = q.gsub(/(__+)[^_]+(__+)/, '\1\2')
           questions << {
             :question => ques,
-            :answer => ans,
+            :answer => ans
           }
         end
         @exercises << {
           :subject => ex['subject'],
-          :questions => questions
+          :questions => questions,
         }
       end
+    end
+
+    def correct?(eidx, qidx, ans)
+      b = true
+      @exercises[eidx][:questions][qidx][:answer].each_with_index do |a, idx|
+        b = false unless /^\(.+\)$/ =~ a || a == ans[idx]
+      end
+      b
     end
 
     def self.load_yaml(io)
@@ -67,25 +72,25 @@ module Exercise
   end
 
   class Runner
-    def self.run(unit)
+    def self.run(content)
       puts
-      puts ("Unit %d" % [unit.number]).bold
-      puts unit.contents[:title].indent(4)
+      puts ("Ex. %d" % [content.seed]).bold
+      puts content.meta[:title].indent(4)
       puts
-      puts unit.contents[:description].indent(4)
+      puts content.meta[:description].indent(4)
       puts
 
       results = []
 
-      unit.exercises.each.with_index do |ex, exi|
-        section = exi + 1
-        puts ("%d.%d" % [unit.number, section]).bold
+      content.exercises.each.with_index do |ex, eidx|
+        section = eidx + 1
+        puts ("%d.%d" % [content.seed, section]).bold
         puts ex[:subject].indent(4)
         puts
         nq = ex[:questions].length
         nc = 0;
-        ex[:questions].each.with_index do |q, qni|
-          puts "%d. %s" % [qni + 1, q[:question]]
+        ex[:questions].each.with_index do |q, qidx|
+          puts "%d. %s" % [qidx + 1, q[:question]]
           ans = []
           q[:answer].each do |a|
             begin
@@ -98,7 +103,7 @@ module Exercise
             end
           end
 
-          if q[:answer] == ans
+          if content.correct?(eidx, qidx, ans)
             res = 'Correct'.green
             nc += 1
           else
@@ -118,7 +123,7 @@ module Exercise
       nq = 0
       results.each do |rs|
         puts ("%d.%d - %.2f %d/%d" % [
-          unit.number,
+          content.seed,
           rs[:section],
           100 * rs[:correct] / rs[:divisor],
           rs[:correct],
@@ -132,8 +137,4 @@ module Exercise
       puts "Total %.2f" % [100 * nc / nq]
     end
   end
-end
-
-module Exercise
-  Runner.run(Unit.load_yaml(open(ARGV[0])))
 end

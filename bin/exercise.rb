@@ -21,7 +21,7 @@ class String
   end
 
   def indent(n)
-    sp = " " * n 
+    sp = " " * n
     s = ""
     self.lines do |ln|
       s << (sp + ln)
@@ -44,11 +44,13 @@ module Exercise
       data['exercises'].each do |ex|
         questions = []
         ex['questions'].each do |q|
-          m = q.match(/__+([^_]+)__+/)
+          ans = q.scan(/__+([^_]+)__+/).map do |m|
+            m[0]
+          end
           ques = q.gsub(/(__+)[^_]+(__+)/, '\1\2')
           questions << {
             :question => ques,
-            :answer => [m[1].to_s],
+            :answer => ans,
           }
         end
         @exercises << {
@@ -84,21 +86,25 @@ module Exercise
         nc = 0;
         ex[:questions].each.with_index do |q, qni|
           puts "%d. %s" % [qni + 1, q[:question]]
-          begin
-            ans = STDIN.gets.chomp
-          rescue Interrupt
-            puts
-            return
-          rescue Exception => e
-            raise e
+          ans = []
+          q[:answer].each do |a|
+            begin
+              ans << STDIN.gets.chomp
+            rescue Interrupt
+              puts
+              return
+            rescue Exception => e
+              raise e
+            end
           end
-          if q[:answer].include?(ans)
+
+          if q[:answer] == ans
             res = 'Correct'.green
             nc += 1
           else
             res = 'Incorrect'.red
           end
-          puts "#{res}: #{q[:answer].join(" or ")}"
+          puts "#{res}: #{q[:answer].join(", ")}"
           puts
         end
         results << { :section => section, :correct => nc, :divisor => nq }

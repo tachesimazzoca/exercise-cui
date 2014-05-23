@@ -116,25 +116,31 @@ module Exercise
         puts
       end
 
-      puts "Results:".bold
-      puts
+      unless results.empty?
+        puts "Results:".bold
+        puts
 
-      nc = 0
-      nq = 0
-      results.each do |rs|
-        puts ("%d.%d - %.2f %d/%d" % [
-          content.seed,
-          rs[:section],
-          100 * rs[:correct] / rs[:divisor],
-          rs[:correct],
-          rs[:divisor]
-        ]).indent(2)
-        nc += rs[:correct]
-        nq += rs[:divisor]
+        nc = 0
+        nq = 0
+        results.each do |rs|
+          puts ("%d.%d - %.2f %d/%d" % [
+            content.seed,
+            rs[:section],
+            100 * rs[:correct] / rs[:divisor],
+            rs[:correct],
+            rs[:divisor]
+          ]).indent(2)
+          nc += rs[:correct]
+          nq += rs[:divisor]
+        end
+
+        puts
+        puts "Total %.2f" % [100 * nc / nq]
+
+      else 
+        puts "Nothing to do".bold
+        puts
       end
-
-      puts
-      puts "Total %.2f" % [100 * nc / nq]
     end
   end
 end

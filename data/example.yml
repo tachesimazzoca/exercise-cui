@@ -1,7 +1,7 @@
 seed: 123
 
 meta:
-  title: Example Exercise 
+  title: Example Exercise
   description: Some description is here.
 
 exercises:
@@ -15,7 +15,10 @@ exercises:
 
   - subject: Write the simple past of these verbs.
     questions:
-      - build ___built___
+      - question: |
+          build ___built___
+        explanation: |
+          build built built
       - eat ___ate___
       - go ___went___
       - see ___saw___

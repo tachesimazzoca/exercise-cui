@@ -41,13 +41,18 @@ module Exercise
       data['exercises'].each do |ex|
         questions = []
         ex['questions'].each do |q|
-          ans = q.scan(/__+([^_]+)__+/).map do |m|
+          q = {
+            'question' => q,
+            'explanation' => ""
+          } if q.is_a?(String)
+          ans = q['question'].scan(/__+([^_]+)__+/).map do |m|
             m[0]
           end
-          ques = q.gsub(/(__+)[^_]+(__+)/, '\1\2')
+          ques = q['question'].gsub(/(__+)[^_]+(__+)/, '\1\2')
           questions << {
             :question => ques,
-            :answer => ans
+            :answer => ans,
+            :explanation => q['explanation']
           }
         end
         @exercises << {
@@ -111,6 +116,10 @@ module Exercise
           end
           puts "#{res}: #{q[:answer].join(", ")}"
           puts
+          unless q[:explanation].empty?
+            puts "#{q[:explanation]}".indent(4)
+            puts
+          end
         end
         results << { :section => section, :correct => nc, :divisor => nq }
         puts
@@ -137,7 +146,7 @@ module Exercise
         puts
         puts "Total %.2f" % [100 * nc / nq]
 
-      else 
+      else
         puts "Nothing to do".bold
         puts
       end
